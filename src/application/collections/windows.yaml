@@ -513,7 +513,15 @@ actions:
             -
                 name: Enable Reset Base in Dism Component Store
                 recommend: standard
-                code: reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\SideBySide\Configuration" /v "DisableResetbase" /t "REG_DWORD" /d "0" /f
+                call:
+                    function: RegAddOrDelete
+                    # Windows 10 21H1: Key exists with value "1" | Windows 11 21H1: Key does not exist
+                    # TODO: Maybe RegAdd not RegAddOrDelete?
+                    parameters:
+                        keyName: HKLM\Software\Microsoft\Windows\CurrentVersion\SideBySide\Configuration
+                        valueName: DisableResetbase
+                        dataType: REG_DWORD
+                        data: '0'
             -
                 name: Clear Windows Product Key from Registry
                 code: slmgr /cpky
@@ -565,8 +573,14 @@ actions:
                         name: Disable Customer Experience Improvement (CEIP/SQM)
                         docs: https://docs.microsoft.com/en-us/windows/win32/devnotes/ceipenable
                         recommend: standard
-                        code: reg add "HKLM\Software\Policies\Microsoft\SQMClient\Windows" /v "CEIPEnable" /t REG_DWORD /d "0" /f
-                        revertCode: reg add "HKLM\Software\Policies\Microsoft\SQMClient\Windows" /v "CEIPEnable" /t REG_DWORD /d "1" /f
+                        call:
+                            function: RegAddOrDelete
+                            # Windows 10 21H1: Key does not exist | Windows 11 21H1: Key does not exist
+                            parameters:
+                                keyName: HKLM\Software\Policies\Microsoft\SQMClient\Windows
+                                valueName: CEIPEnable
+                                dataType: REG_DWORD
+                                data: '0'
                     -
                         name: Disable Application Impact Telemetry (AIT)
                         recommend: standard
@@ -6545,3 +6559,12 @@ functions:
                         }
                         exit 1
                     }
+    -
+        name: RegAddOrDelete
+        parameters:
+            - name: keyName     # Full path of the subkey or entry to be added. 
+            - name: valueName   # Name of the add registry entry.
+            - name: dataType    # Type for the registry entry.
+            - name: data        # Data for the new registry entry.
+        code: reg add "{{ $keyName }}" /v "{{ $valueName }}" /t "{{ $dataType }}" /d "{{ $data }}" /f
+        revertCode: reg delete "{{ $keyName }}" /v "{{ $valueName }}" /f 2>nul
