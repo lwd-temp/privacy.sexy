@@ -230,24 +230,52 @@ actions:
                                     Visual Studio is uninstalled [1] which may reveal unnecessary data and not be desired.
                                     This key is not only stored for purchased Visual Studio products but also for the free trials.
 
-                                    [1]: https://stackoverflow.com/questions/12465361/how-to-change-visual-studio-2012-2013-or-2015-license-key "How to change Visual Studio 2012,2013 or 2015 License Key? | Stack Overflow"
+                                    [1]: https://web.archive.org/web/20231124133613/https://stackoverflow.com/questions/12465361/how-to-change-visual-studio-2012-2013-or-2015-license-key "How to change Visual Studio 2012,2013 or 2015 License Key? | Stack Overflow"
                                 children:
                                     -
                                         name: Clear Visual Studio 2010 licenses
-                                        docs: "[How to change Visual Studio 2012,2013 or 2015 License Key? | Stack Overflow](https://stackoverflow.com/a/14810695)"
-                                        code: reg delete "HKCR\Licenses\77550D6B-6352-4E77-9DA3-537419DF564B" /va /f
+                                        docs: |-
+                                            This script deletes the license information from the registry.
+                                            Specifically, `HKCR\Licenses\77550D6B-6352-4E77-9DA3-537419DF564B` registry key contains the license information [1].
+
+                                            [1]: https://web.archive.org/web/20231124133613/https://stackoverflow.com/questions/12465361/how-to-change-visual-studio-2012-2013-or-2015-license-key/14810695#14810695 "How to change Visual Studio 2012,2013 or 2015 License Key? | Stack Overflow | stackoverflow.com"
+                                        call:
+                                            function: DeleteRegistryKey
+                                            parameters:
+                                                keyPath: 'HKCR\Licenses\77550D6B-6352-4E77-9DA3-537419DF564B'
                                     -
                                         name: Clear Visual Studio 2015 licenses
-                                        docs: "[How to change Visual Studio 2012,2013 or 2015 License Key? | Stack Overflow](https://stackoverflow.com/a/32482322)"
-                                        code: reg delete "HKCR\Licenses\4D8CFBCB-2F6A-4AD2-BABF-10E28F6F2C8F" /va /f
+                                        docs: |-
+                                            This script deletes the license information from the registry.
+                                            Specifically, `HKCR\Licenses\4D8CFBCB-2F6A-4AD2-BABF-10E28F6F2C8F` registry key contains the license information [1].
+
+                                            [1]: https://web.archive.org/web/20231124133749/https://stackoverflow.com/questions/12465361/how-to-change-visual-studio-2012-2013-or-2015-license-key/32482322#32482322 "How to change Visual Studio 2012,2013 or 2015 License Key? | Stack Overflow | stackoverflow.com"
+                                        call:
+                                            function: DeleteRegistryKey
+                                            parameters:
+                                                keyPath: 'HKCR\Licenses\4D8CFBCB-2F6A-4AD2-BABF-10E28F6F2C8F'
                                     -
                                         name: Clear Visual Studio 2017 licenses
-                                        docs: "[Is Visual Studio Community a 30 day trial? | Stack Overflow](https://stackoverflow.com/a/51570570)"
-                                        code: reg delete "HKCR\Licenses\5C505A59-E312-4B89-9508-E162F8150517" /va /f
+                                        docs: |-
+                                            This script deletes the license information from the registry.
+                                            Specifically, `HKCR\Licenses\5C505A59-E312-4B89-9508-E162F8150517` registry key contains the license information [1].
+
+                                            [1]: https://web.archive.org/web/20231124134032/https://stackoverflow.com/questions/43390466/is-visual-studio-community-a-30-day-trial/51570570#51570570 "Is Visual Studio Community a 30 day trial? | Stack Overflow | stackoverflow.com"
+                                        call:
+                                            function: DeleteRegistryKey
+                                            parameters:
+                                                keyPath: 'HKCR\Licenses\5C505A59-E312-4B89-9508-E162F8150517'
                                     -
                                         name: Clear Visual Studio 2019 licenses
-                                        docs: "[How to change Visual Studio 2017 License Key? | Stack Overflow](https://stackoverflow.com/a/46974337)"
-                                        code: reg delete "HKCR\Licenses\41717607-F34E-432C-A138-A3CFD7E25CDA" /va /f
+                                        docs: |-
+                                            This script deletes the license information from the registry.
+                                            Specifically, `HKCR\Licenses\41717607-F34E-432C-A138-A3CFD7E25CDA` registry key contains the license information [1].
+
+                                            [1]: https://web.archive.org/web/20231124134207/https://stackoverflow.com/questions/46731291/how-to-change-visual-studio-2017-license-key/46974337#46974337 "How to change Visual Studio 2017 License Key? | Stack Overflow | stackoverflow.com"
+                                        call:
+                                            function: DeleteRegistryKey
+                                            parameters:
+                                                keyPath: 'HKCR\Licenses\41717607-F34E-432C-A138-A3CFD7E25CDA'
                                     -
                                         name: Clear Visual Studio 2022 licenses
                                         docs: |-
@@ -255,13 +283,22 @@ actions:
                                             The latest reported key is `1299B4B9-DFCC-476D-98F0-F65A2B46C96D` [2] [3]. I have tested and verified this along with some
                                             other keys of preview versions. This scripts deletes all mentioned keys.
 
-                                            [1]: https://github.com/beatcracker/VSCELicense/issues/14 "VS 2022 Key Discussion | beatcracker/VSCELicense | GitHub"
-                                            [2]: https://learn.microsoft.com/en-us/answers/questions/673243/how-do-i-remove-a-license-from-visual-studio-2022.html "MSFT Answer | Microsoft Learn"
-                                            [3]: https://stackoverflow.com/a/71624750 "How to change Visual Studio 2017 License Key? | Stack Overflow"
-                                        code: |-
-                                            reg delete "HKCR\Licenses\B16F0CF0-8AD1-4A5B-87BC-CB0DBE9C48FC" /va /f
-                                            reg delete "HKCR\Licenses\10D17DBA-761D-4CD8-A627-984E75A58700" /va /f
-                                            reg delete "HKCR\Licenses\1299B4B9-DFCC-476D-98F0-F65A2B46C96D" /va /f
+                                            [1]: https://web.archive.org/web/20231124134314/https://github.com/beatcracker/VSCELicense/issues/14 "VS 2022 Key Discussion | beatcracker/VSCELicense | GitHub | github.com"
+                                            [2]: https://web.archive.org/web/20231124134431/https://learn.microsoft.com/en-us/answers/questions/673243/how-do-i-remove-a-license-from-visual-studio-2022 "MSFT Answer | Microsoft Learn | learn.microsoft.com"
+                                            [3]: https://web.archive.org/web/20231124134322/https://stackoverflow.com/questions/46731291/how-to-change-visual-studio-2017-license-key/71624750#71624750 "How to change Visual Studio 2017 License Key? | Stack Overflow | stackoverflow.com"
+                                        call:
+                                            -
+                                                function: DeleteRegistryKey
+                                                parameters:
+                                                    keyPath: 'HKCR\Licenses\B16F0CF0-8AD1-4A5B-87BC-CB0DBE9C48FC'
+                                            -
+                                                function: DeleteRegistryKey
+                                                parameters:
+                                                    keyPath: 'HKCR\Licenses\10D17DBA-761D-4CD8-A627-984E75A58700'
+                                            -
+                                                function: DeleteRegistryKey
+                                                parameters:
+                                                    keyPath: 'HKCR\Licenses\1299B4B9-DFCC-476D-98F0-F65A2B46C96D'
                     -
                         category: Clear most recently used (MRU) lists
                         children:
@@ -6323,22 +6360,70 @@ actions:
                                         revertCode: reg delete "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Systray" /v "HideSystray" /f 2>nul
                                     -
                                         name: Remove "Scan with Microsoft Defender" from context menu
-                                        docs:
-                                            - https://windowsreport.com/remove-right-click-windows-defender-scan-windows-10/
-                                            - https://twigstechtips.blogspot.com/2010/06/windows-remove-with-microsoft-security.html
-                                        code: |-
-                                            reg delete "HKLM\SOFTWARE\Classes\CLSID\{09A47860-11B0-4DA5-AFA5-26D86198A780}\InprocServer32" /va /f 2>nul
-                                            reg delete "HKCR\CLSID\{09A47860-11B0-4DA5-AFA5-26D86198A780}" /v "InprocServer32" /f 2>nul
-                                            reg delete "HKCR\*\shellex\ContextMenuHandlers" /v "EPP" /f 2>nul
-                                            reg delete "HKCR\Directory\shellex\ContextMenuHandlers" /v "EPP" /f 2>nul
-                                            reg delete "HKCR\Drive\shellex\ContextMenuHandlers" /v "EPP" /f 2>nul
-                                        revertCode: |-
-                                            reg add "HKLM\SOFTWARE\Classes\CLSID\{09A47860-11B0-4DA5-AFA5-26D86198A780}" /v "InprocServer32" /t REG_SZ /d "%ProgramFiles%\Windows Defender\shellext.dll" /f
-                                            reg add "HKCR\SOFTWARE\Classes\CLSID\{09A47860-11B0-4DA5-AFA5-26D86198A780}\InprocServer32" /v "ThreadingModel" /t REG_SZ /d "Apartment" /f
-                                            reg add "HKCR\CLSID\{09A47860-11B0-4DA5-AFA5-26D86198A780}\InprocServer32" /ve /t REG_SZ /d "%ProgramFiles%\Windows Defender\shellext.dll" /f
-                                            reg add "HKCR\*\shellex\ContextMenuHandlers" /v "EPP" /t REG_SZ /d "{09A47860-11B0-4DA5-AFA5-26D86198A780}" /f
-                                            reg add "HKCR\Directory\shellex\ContextMenuHandlers" /v "EPP" /t REG_SZ /d "{09A47860-11B0-4DA5-AFA5-26D86198A780}" /f
-                                            reg add "HKCR\Drive\shellex\ContextMenuHandlers" /v "EPP" /t REG_SZ /d "{09A47860-11B0-4DA5-AFA5-26D86198A780}" /f
+                                        docs: |-
+                                            This script removes the "Scan with Microsoft Defender" option from the right-click context menu.
+
+                                            This feature, while useful for some, may be unnecessary or unwanted for users, especially if they prefer not to use Defender
+                                            due to concerns about data collection during scans and at regular intervals.
+                                            By removing this option, the script enhances user privacy by limiting the engagement with Defender's data collection processes.
+
+                                            The script functions by altering specific registry keys that correspond to the Defender context menu option. It specifically targets the
+                                            CLSID `{09A47860-11B0-4DA5-AFA5-26D86198A780}`, which is associated with this option [1] [2]. The deletion of this key effectively removes
+                                            the "Scan with Microsoft Defender" option from the context menu. This feature is provided by `shellext.dll` file located in Defender's
+                                            program files [1].
+
+                                            This script only affects the appearance of the context menu and does not disable Microsoft Defender or its other functions.
+
+                                            [1]: https://web.archive.org/web/20231124215149/https://strontic.github.io/xcyclopedia/library/clsid_09A47860-11B0-4DA5-AFA5-26D86198A780.html "CLSID 09A47860-11B0-4DA5-AFA5-26D86198A780 | (C:\Program Files\Windows Defender\shellext.dll) | STRONTIC | strontic.github.io"
+                                            [2]: https://web.archive.org/web/20231124215202/https://www.shouldiblockit.com/shellext.dll-d9ed4e24723880f608c62e2e00430bdd.aspx "shellext.dll - Should I Block It? (MD5 d9ed4e24723880f608c62e2e00430bdd) | www.shouldiblockit.com"
+                                        call:
+                                            # It modifies the registry keys in the `HKLM\Software\Classes` branch. The `HKCR` (HKEY_CLASSES_ROOT) keys are not modified, as they
+                                            # are a merged view of the `HKLM\Software\Classes` and `HKCU\Software\Classes` keys. Since the `HKCU` keys for the context menu are
+                                            # not present by default, and modifications to `HKLM` are automatically reflected in `HKCR`, there's no need to modify `HKCU` or `HKCR` keys directly.
+                                            -
+                                                function: DeleteRegistryValue
+                                                parameters:
+                                                    keyPath: 'HKLM\SOFTWARE\Classes\CLSID\{09A47860-11B0-4DA5-AFA5-26D86198A780}\InprocServer32'
+                                                    valueName: (Default)
+                                                    # Default values:
+                                                    #   Check          : Get-ItemProperty -Path 'HKLM:\SOFTWARE\Classes\CLSID\{09A47860-11B0-4DA5-AFA5-26D86198A780}\InprocServer32' -Name '(Default)'
+                                                    #   Windows 10 22H2: C:\Program Files\Windows Defender\shellext.dll (REG_SZ)
+                                                    #   Windows 11 23H2: C:\Program Files\Windows Defender\shellext.dll (REG_SZ)
+                                                    revertDataType: REG_SZ
+                                                    revertDataValue: '%ProgramFiles%\Windows Defender\shellext.dll'
+                                            -
+                                                function: DeleteRegistryValue
+                                                parameters:
+                                                    keyPath: 'HKLM\SOFTWARE\Classes\CLSID\{09A47860-11B0-4DA5-AFA5-26D86198A780}\InprocServer32'
+                                                    valueName: ThreadingModel
+                                                    # Default values:
+                                                    #   Check           : Get-ItemProperty -Path 'HKLM:\SOFTWARE\Classes\CLSID\{09A47860-11B0-4DA5-AFA5-26D86198A780}\InprocServer32' -Name 'ThreadingModel'
+                                                    #   Windows 10 22H2 : Apartment (REG_SZ)
+                                                    #   Windows 11 23H2 : Apartment (REG_SZ)
+                                                    revertDataType: REG_SZ
+                                                    revertDataValue: 'Apartment'
+                                            -
+                                                function: DeleteRegistryValue
+                                                parameters:
+                                                    keyPath: 'HKLM\SOFTWARE\Classes\Directory\shellex\ContextMenuHandlers\EPP'
+                                                    valueName: (Default)
+                                                    # Default values:
+                                                    #   Check          : Get-ItemProperty -Path 'HKLM:\SOFTWARE\Classes\Directory\shellex\ContextMenuHandlers\EPP' -Name '(Default)'
+                                                    #   Windows 10 22H2: {09A47860-11B0-4DA5-AFA5-26D86198A780} (REG_SZ)
+                                                    #   Windows 11 23H2: {09A47860-11B0-4DA5-AFA5-26D86198A780} (REG_SZ)
+                                                    revertDataType: REG_SZ
+                                                    revertDataValue: '{09A47860-11B0-4DA5-AFA5-26D86198A780}'
+                                            -
+                                                function: DeleteRegistryValue
+                                                parameters:
+                                                    keyPath: 'HKLM\SOFTWARE\Classes\Drive\shellex\ContextMenuHandlers\EPP'
+                                                    valueName: (Default)
+                                                    # Default values:
+                                                    #   Check          : Get-ItemProperty -Path 'HKLM:\SOFTWARE\Classes\Drive\shellex\ContextMenuHandlers\EPP' -Name '(Default)'
+                                                    #   Windows 10 22H2: {09A47860-11B0-4DA5-AFA5-26D86198A780} (REG_SZ)
+                                                    #   Windows 11 23H2: {09A47860-11B0-4DA5-AFA5-26D86198A780} (REG_SZ)
+                                                    revertDataType: REG_SZ
+                                                    revertDataValue: '{09A47860-11B0-4DA5-AFA5-26D86198A780}'
                                     -
                                         name: Remove "Windows Security" icon from taskbar
                                         docs: |-
@@ -12009,7 +12094,7 @@ functions:
                     # This script modifies the system registry to enable the uninstallation of a specified app.
                     # Some apps (including system apps) are marked as non-removable, which prevents uninstallation and results in error 0x80070032 if an uninstall is attempted.
                     # To bypass this, the script marks the app as 'EndOfLife' in the registry, tricking the system into allowing the uninstallation
-                    keyName: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\EndOfLife\$CURRENT_USER_SID\{{ $packageName }}_{{ $publisherId }}
+                    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\EndOfLife\$CURRENT_USER_SID\{{ $packageName }}_{{ $publisherId }}
                     replaceSid: 'true'
             -
                 function: UninstallStoreApp
@@ -12024,7 +12109,7 @@ functions:
                     # This script reverses the previous modification made to the Windows registry to enable its uninstallation.
                     # By removing the 'EndOfLife' status from the registry entry, the app is restored to its default, non-removable state.
                     # Restoring (removing) this key is important for maintaining the stability of Windows Updates (for details: https://github.com/undergroundwires/privacy.sexy/issues/287).
-                    keyName: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\EndOfLife\$CURRENT_USER_SID\{{ $packageName }}_{{ $publisherId }}
+                    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\EndOfLife\$CURRENT_USER_SID\{{ $packageName }}_{{ $publisherId }}
                     replaceSid: 'true'
             -
                 # Clear: User-specific data
@@ -13634,7 +13719,7 @@ functions:
     -
         name: CreateRegistryKey
         parameters:
-            - name: keyName     # Full path of the subkey or entry to be added.
+            - name: keyPath     # Full path of the subkey or entry to be added.
             - name: replaceSid  # Replaces "$CURRENT_USER_SID" string in registry key with user SID.
               optional: true
             - name: codeComment
@@ -13647,10 +13732,10 @@ functions:
             function: RunPowerShell
             parameters:
                 code: |-
-                    $keyName='{{ $keyName }}'
+                    $keyPath='{{ $keyPath }}'
                     $replaceSid={{ with $replaceSid }} $true # {{ end }} $false
-                    $registryHive = $keyName.Split('\')[0]
-                    $registryPath = "$($registryHive):$($keyName.Substring($registryHive.Length))"
+                    $registryHive = $keyPath.Split('\')[0]
+                    $registryPath = "$($registryHive):$($keyPath.Substring($registryHive.Length))"
                     {{ with $replaceSid }}
                         $userSid = (New-Object System.Security.Principal.NTAccount($env:USERNAME)).Translate([Security.Principal.SecurityIdentifier]).Value
                         $registryPath = $registryPath.Replace('$CURRENT_USER_SID', $userSid)
@@ -13670,7 +13755,7 @@ functions:
     -    
         name: DeleteRegistryKey
         parameters:
-            - name: keyName     # Full path of the subkey or entry to be added.
+            - name: keyPath     # Full path of the subkey or entry to be deleted.
             - name: replaceSid  # Replaces "$CURRENT_USER_SID" string in registry key with user SID.
               optional: true
             - name: codeComment
@@ -13679,27 +13764,116 @@ functions:
               optional: true
         call:
             # Marked: refactor-with-variables
-            #   Replacing SID is same as `CreateRegistryKey`
+            #   - Replacing SID is same as `CreateRegistryKey`
+            #   - Creating new key if it does not exists is same in `DeleteRegistryValue`
             function: RunPowerShell
             parameters:
                 code: |-
-                    $keyName='{{ $keyName }}'
+                    $keyPath='{{ $keyPath }}'
                     $replaceSid={{ with $replaceSid }} $true # {{ end }} $false
-                    $registryHive = $keyName.Split('\')[0]
-                    $registryPath = "$($registryHive):$($keyName.Substring($registryHive.Length))"
+                    $registryValue = {{ with $valueName }} '{{ . }}' # {{ end }}'(Default)'
+                    $registryHive = $keyPath.Split('\')[0]
+                    $registryKey = "$($registryHive):$($keyPath.Substring($registryHive.Length))"
                     {{ with $replaceSid }}
                         $userSid = (New-Object System.Security.Principal.NTAccount($env:USERNAME)).Translate([Security.Principal.SecurityIdentifier]).Value
-                        $registryPath = $registryPath.Replace('$CURRENT_USER_SID', $userSid)
+                        $registryKey = $registryKey.Replace('$CURRENT_USER_SID', $userSid)
                     {{ end }}
-                    if (-not (Test-Path $registryPath)) {
-                        Write-Host "Skipping, no action needed, registry path `"$registryPath`" does not exist."
+                    if (-not (Test-Path $registryKey)) {
+                        Write-Host "Skipping, no action needed, registry key `"$registryKey`" does not exist."
                         exit 0
                     }
                     try {
-                        Remove-Item -Path $registryPath -Force -ErrorAction Stop | Out-Null
-                        Write-Host "Successfully removed the registry key at path `"$registryPath`"."
+                        Remove-Item -Path $registryKey -Force -ErrorAction Stop | Out-Null
+                        Write-Host "Successfully removed the registry key at path `"$registryKey`"."
                     } catch {
-                        Write-Error "Failed to remove the registry key at path `"$registryPath`": $($_.Exception.Message)"
+                        Write-Error "Failed to remove the registry key at path `"$registryKey`": $($_.Exception.Message)"
                     }
                 codeComment: '{{ with $codeComment }}{{ . }}{{ end }}'
                 revertCodeComment: '{{ with $revertCodeComment }}{{ . }}{{ end }}'
+    -
+        name: DeleteRegistryValue
+        parameters:
+            - name: keyPath         # Full path of the subkey or entry to be deleted
+            - name: valueName       # Name of the add registry entry.
+            - name: revertDataType  # Type for the registry entry.
+              optional: true        # Allowed values: REG_SZ | REG_EXPAND_SZ | REG_DWORD | REG_QWORD
+            - name: revertDataValue # Data for the new registry entry.
+              optional: true
+        call:
+            function: RunPowerShell
+            parameters:
+                codeComment: 'Delete registry value: {{ $keyPath }}\{{ $valueName }}'
+                code: |-
+                    $keyPath='{{ $keyPath }}'
+                    $registryValue = '{{ $valueName }}'
+                    $registryHive = $keyPath.Split('\')[0]
+                    $registryKey = "$($registryHive):$($keyPath.Substring($registryHive.Length))"
+                    if (-not ((Get-ItemProperty -Path $registryKey -Name $registryValue -ErrorAction SilentlyContinue))) {
+                        Write-Host "Skipping, no action needed, registry value `"$registryValue`"' does not exist in the path `"$registryKey`"."
+                        exit 0
+                    }
+                    try {
+                        if ($registryValue -eq '(Default)') { # Workaround for PowerShell/PowerShell#6243
+                            (Get-Item -Path $registryKey).OpenSubKey('', $true).DeleteValue('')
+                        } else {
+                            Remove-ItemProperty -Path $registryKey -Name $registryValue -Force -ErrorAction Stop | Out-Null
+                        }
+                        Write-Host "Successfully removed the `"$registryValue`" from `"$registryKey`"."
+                    } catch {
+                        Write-Error "Failed to remove the registry key at path `"$registryKey`": $($_.Exception.Message)"
+                    }
+                # Marked: refactor-with-variables
+                #   - Creating new key if it does not exists is same in `DeleteRegistryKey`
+                revertCodeComment: 'Restore registry value: {{ $keyPath }}\{{ $valueName }}'
+                revertCode: |-
+                    {{ with $revertDataValue }}
+                        $keyPath='{{ $keyPath }}'
+                        $registryValue = '{{ $valueName }}'
+                        $revertDataValue = '{{ $revertDataValue }}'
+                        $revertDataType = '{{ $revertDataType }}'
+                        $registryHive = $keyPath.Split('\')[0]
+                        $registryKey = "$($registryHive):$($keyPath.Substring($registryHive.Length))"
+                        $existingProperty = Get-ItemProperty -Path $registryKey -Name $registryValue -ErrorAction SilentlyContinue
+                        if ($existingProperty) {
+                            $originalDataValue = $existingProperty.$registryValue
+                            if ($originalDataValue -eq $revertDataValue) {
+                                Write-Host "Skipping, no action needed, registry value `"$registryValue`" already has the expected data in `"$registryKey`"."
+                                exit 0
+                            }
+                            if ($originalDataValue) {
+                                Write-Host "Existing value `"$currentData`" will be replaced with `"$revertDataValue`"."
+                            }
+                        } else {
+                            if (-not (Test-Path $registryKey)) {
+                                try {
+                                    New-Item -Path $registryPath -Force -ErrorAction Stop | Out-Null
+                                    Write-Host "Successfully created the registry key at path `"$keyPath`"."
+                                } catch {
+                                    throw "Failed to create the registry key at path `"$keyPath`": $($_.Exception.Message)"
+                                }
+                            }
+                        }
+                        try {
+                            $dataValue=$null
+                            $dataType=$null
+                            if ($revertDataType -eq 'REG_SZ') {
+                                $dataValue=$revertDataValue
+                                $dataType='String'
+                            } elseif ($revertDataType -eq 'REG_EXPAND_SZ') {
+                                $dataValue=$revertDataValue
+                                $dataType='ExpandString'
+                            } elseif ($revertDataType -eq 'REG_DWORD') {
+                                $dataValue=([int32]$revertDataValue)
+                                $dataType='DWord'
+                            } elseif ($revertDataType -eq 'REG_QWORD') {
+                                $dataValue=([int64]$revertDataValue)
+                                $dataType='QWord'
+                            } else {
+                                throw "Unsupported data type `"$revertDataType`"."
+                            }
+                            Set-ItemProperty -Path $registryKey -Name $registryValue -Value $dataValue -Type $dataType -Force -ErrorAction Stop
+                            Write-Host "Successfully reverted `"$registryValue`" to `"$revertDataValue`" in `"$registryKey`"."
+                        } catch {
+                            throw "Failed to revert the registry value `"$registryValue`" in `"$registryKey`": $($_.Exception.Message)"
+                        }
+                    {{ end }}
