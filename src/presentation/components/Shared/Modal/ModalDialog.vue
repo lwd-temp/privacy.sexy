@@ -63,7 +63,7 @@ export default defineComponent({
 @use "@/presentation/assets/styles/main" as *;
 
 .dialog {
-  margin-bottom: 10px;
+  margin-bottom: $spacing-absolute-medium;
   display: flex;
   flex-direction: row;
 
@@ -75,7 +75,7 @@ export default defineComponent({
     color: $color-primary-dark;
     width: auto;
     font-size: $font-size-absolute-large;
-    margin-right: 0.25em;
+    margin-right: $spacing-absolute-small;
     align-self: flex-start;
   }
 }

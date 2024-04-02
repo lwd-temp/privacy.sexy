@@ -108,8 +108,8 @@ export default defineComponent({
   border-right: none;
   height: 36px;
   border-radius: 3px 0 0 3px;
-  padding-left:10px;
-  padding-right:10px;
+  padding-left: $spacing-absolute-medium;
+  padding-right: $spacing-absolute-medium;
   outline: none;
   color: $color-primary;
   font-size: $font-size-absolute-normal;
@@ -127,6 +127,6 @@ export default defineComponent({
   color: $color-on-primary;
   border-radius: 0 5px 5px 0;
   font-size: $font-size-absolute-large;
-  padding:5px;
+  padding: $spacing-absolute-x-small;
 }
 </style>

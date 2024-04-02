@@ -1,13 +1,13 @@
 <template>
   <div class="scripts-menu">
-    <div class="scripts-menu-item scripts-menu-rows">
+    <div class="scripts-menu-item scripts-menu-rows left">
       <TheRecommendationSelector class="scripts-menu-item" />
       <TheRevertSelector class="scripts-menu-item" />
     </div>
-    <TheOsChanger class="scripts-menu-item" />
+    <TheOsChanger class="scripts-menu-item middle" />
     <TheViewChanger
       v-if="!isSearching"
-      class="scripts-menu-item"
+      class="scripts-menu-item right"
       @view-changed="$emit('viewChanged', $event)"
     />
   </div>
@@ -70,8 +70,6 @@ export default defineComponent({
 @use "@/presentation/assets/styles/main" as *;
 @use 'sass:math';
 
-$spacing-small: math.div($base-spacing, 2);
-
 @mixin center-middle-flex-item {
   &:first-child, &:last-child {
     flex-grow: 1;
@@ -87,12 +85,12 @@ $responsive-alignment-breakpoint: $media-screen-medium-width;
 .scripts-menu {
   display: flex;
   flex-wrap: wrap;
-  column-gap: $base-spacing;
-  row-gap: $base-spacing;
+  column-gap: $spacing-relative-medium;
+  row-gap: $spacing-relative-small;
   flex-wrap: wrap;
   align-items: center;
-  margin-left: $spacing-small;
-  margin-right: $spacing-small;
+  margin-left: $spacing-absolute-small;
+  margin-right: $spacing-absolute-small;
   @media screen and (max-width: $responsive-alignment-breakpoint) {
     justify-content: space-around;
   }
@@ -106,7 +104,7 @@ $responsive-alignment-breakpoint: $media-screen-medium-width;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    row-gap: 0.5em;
+    row-gap: $spacing-relative-x-small;
   }
 }
 </style>
