@@ -2,221 +2,314 @@ import { CategoryStub } from '@tests/unit/shared/Stubs/CategoryStub';
 import { CategoryCollectionStub } from '@tests/unit/shared/Stubs/CategoryCollectionStub';
 import { ScriptStub } from '@tests/unit/shared/Stubs/ScriptStub';
 import type { ScriptSelection } from '@/application/Context/State/Selection/Script/ScriptSelection';
-import type { ICategoryCollection } from '@/domain/ICategoryCollection';
+import type { CategoryCollection } from '@/domain/Collection/CategoryCollection';
 import { ScriptToCategorySelectionMapper } from '@/application/Context/State/Selection/Category/ScriptToCategorySelectionMapper';
 import { ScriptSelectionStub } from '@tests/unit/shared/Stubs/ScriptSelectionStub';
-import type { CategorySelectionChange } from '@/application/Context/State/Selection/Category/CategorySelectionChange';
-import type { ScriptSelectionChange, ScriptSelectionChangeCommand } from '@/application/Context/State/Selection/Script/ScriptSelectionChange';
 import { expectExists } from '@tests/shared/Assertions/ExpectExists';
-import type { ICategory, IScript } from '@/domain/ICategory';
+import type { ScriptSelectionChangeCommand } from '@/application/Context/State/Selection/Script/ScriptSelectionChange';
+import { buildTestScenarioData, type CategoryChangeProcessingTestScenario } from './CategoryChangeProcessingTestScenario';
 
 describe('ScriptToCategorySelectionMapper', () => {
   describe('areAllScriptsSelected', () => {
-    it('should return false for partially selected scripts', () => {
-      // arrange
-      const expected = false;
-      const { sut, category } = setupTestWithPreselectedScripts({
+    const testScenarios: ReadonlyArray<{
+      readonly description: string;
+      readonly preselect: PreselectedTestOptions['preselect'];
+      readonly expectedResult: boolean;
+    }> = [
+      {
+        description: 'no selected scripts',
+        preselect: () => [],
+        expectedResult: false,
+      },
+      {
+        description: 'partially selected scripts',
         preselect: (allScripts) => [allScripts[0]],
-      });
-      // act
-      const actual = sut.areAllScriptsSelected(category);
-      // assert
-      expect(actual).to.equal(expected);
-    });
-    it('should return true when all scripts are selected', () => {
-      // arrange
-      const expected = true;
-      const { sut, category } = setupTestWithPreselectedScripts({
+        expectedResult: false,
+      },
+      {
+        description: 'all scripts are selected',
         preselect: (allScripts) => [...allScripts],
+        expectedResult: true,
+      },
+    ];
+    testScenarios.forEach((
+      { description, preselect, expectedResult },
+    ) => {
+      it(`${description}: returns ${expectedResult}`, () => {
+        const { sut, category } = setupTestWithPreselectedScripts({
+          preselect,
+        });
+        // act
+        const actual = sut.areAllScriptsSelected(category);
+        // assert
+        expect(actual).to.equal(expectedResult);
       });
-      // act
-      const actual = sut.areAllScriptsSelected(category);
-      // assert
-      expect(actual).to.equal(expected);
     });
   });
   describe('isAnyScriptSelected', () => {
-    it('should return false with no selected scripts', () => {
-      // arrange
-      const expected = false;
-      const { sut, category } = setupTestWithPreselectedScripts({
+    const testScenarios: ReadonlyArray<{
+      readonly description: string;
+      readonly preselect: PreselectedTestOptions['preselect'];
+      readonly expectedResult: boolean;
+    }> = [
+      {
+        description: 'no selected scripts',
         preselect: () => [],
-      });
-      // act
-      const actual = sut.isAnyScriptSelected(category);
-      // assert
-      expect(actual).to.equal(expected);
-    });
-    it('should return true with at least one script selected', () => {
-      // arrange
-      const expected = true;
-      const { sut, category } = setupTestWithPreselectedScripts({
+        expectedResult: false,
+      },
+      {
+        description: 'one script is selected',
         preselect: (allScripts) => [allScripts[0]],
+        expectedResult: true,
+      },
+      {
+        description: 'all scripts are selected',
+        preselect: (allScripts) => [...allScripts],
+        expectedResult: true,
+      },
+    ];
+    testScenarios.forEach((
+      { description, preselect, expectedResult },
+    ) => {
+      it(`${description}: returns ${expectedResult}`, () => {
+        const { sut, category } = setupTestWithPreselectedScripts({
+          preselect,
+        });
+        // act
+        const actual = sut.isAnyScriptSelected(category);
+        // assert
+        expect(actual).to.equal(expectedResult);
       });
-      // act
-      const actual = sut.isAnyScriptSelected(category);
-      // assert
-      expect(actual).to.equal(expected);
     });
   });
   describe('processChanges', () => {
-    const testScenarios: ReadonlyArray<{
-      readonly description: string;
-      readonly changes: readonly CategorySelectionChange[];
-      readonly categories: ReadonlyArray<{
-        readonly categoryId: ICategory['id'],
-        readonly scriptIds: readonly IScript['id'][],
-      }>;
-      readonly expected: readonly ScriptSelectionChange[],
-    }> = [
+    const testScenarios: readonly CategoryChangeProcessingTestScenario[] = [
       {
         description: 'single script: select without revert',
-        categories: [
-          { categoryId: 1, scriptIds: ['single-script'] },
+        initialCategorySetup: [
+          {
+            categoryId: 'single-category',
+            scriptIds: ['single-script'],
+          },
         ],
-        changes: [
-          { categoryId: 1, newStatus: { isSelected: true, isReverted: false } },
-        ],
-        expected: [
-          { scriptId: 'single-script', newStatus: { isSelected: true, isReverted: false } },
-        ],
+        doCategoryChanges: ({ changeStatusOfAllCategories }) => changeStatusOfAllCategories(
+          { isSelected: true, isReverted: false },
+        ),
+        expectScriptChanges: ({ expectSameStatusFromAllScripts }) => expectSameStatusFromAllScripts(
+          { isSelected: true, isReverted: false },
+        ),
       },
       {
         description: 'multiple scripts: select without revert',
-        categories: [
-          { categoryId: 1, scriptIds: ['script1-cat1', 'script2-cat1'] },
-          { categoryId: 2, scriptIds: ['script3-cat2'] },
+        initialCategorySetup: [
+          {
+            categoryId: 'first-category',
+            scriptIds: ['first-category-first-script', 'first-category-second-script'],
+          },
+          {
+            categoryId: 'second-category',
+            scriptIds: ['second-category-first-script'],
+          },
         ],
-        changes: [
-          { categoryId: 1, newStatus: { isSelected: true, isReverted: false } },
-          { categoryId: 2, newStatus: { isSelected: true, isReverted: false } },
-        ],
-        expected: [
-          { scriptId: 'script1-cat1', newStatus: { isSelected: true, isReverted: false } },
-          { scriptId: 'script2-cat1', newStatus: { isSelected: true, isReverted: false } },
-          { scriptId: 'script3-cat2', newStatus: { isSelected: true, isReverted: false } },
-        ],
+        doCategoryChanges: ({ changeStatusOfAllCategories }) => changeStatusOfAllCategories(
+          { isSelected: true, isReverted: false },
+        ),
+        expectScriptChanges: ({ expectSameStatusFromAllScripts }) => expectSameStatusFromAllScripts(
+          { isSelected: true, isReverted: false },
+        ),
       },
       {
         description: 'single script: select with revert',
-        categories: [
-          { categoryId: 1, scriptIds: ['single-script'] },
+        initialCategorySetup: [
+          {
+            categoryId: 'single-category',
+            scriptIds: ['single-script'],
+          },
         ],
-        changes: [
-          { categoryId: 1, newStatus: { isSelected: true, isReverted: true } },
-        ],
-        expected: [
-          { scriptId: 'single-script', newStatus: { isSelected: true, isReverted: true } },
-        ],
+        doCategoryChanges: ({ changeStatusOfAllCategories }) => changeStatusOfAllCategories(
+          { isSelected: true, isReverted: true },
+        ),
+        expectScriptChanges: ({ expectSameStatusFromAllScripts }) => expectSameStatusFromAllScripts(
+          { isSelected: true, isReverted: true },
+        ),
       },
       {
         description: 'multiple scripts: select with revert',
-        categories: [
-          { categoryId: 1, scriptIds: ['script-1-cat-1'] },
-          { categoryId: 2, scriptIds: ['script-2-cat-2'] },
-          { categoryId: 3, scriptIds: ['script-3-cat-3'] },
+        initialCategorySetup: [
+          {
+            categoryId: 'first-category',
+            scriptIds: ['first-category-first-script'],
+          },
+          {
+            categoryId: 'second-category',
+            scriptIds: ['second-category-first-script'],
+          },
+          {
+            categoryId: 'third-category',
+            scriptIds: ['third-category-first-script'],
+          },
         ],
-        changes: [
-          { categoryId: 1, newStatus: { isSelected: true, isReverted: true } },
-          { categoryId: 2, newStatus: { isSelected: true, isReverted: true } },
-          { categoryId: 3, newStatus: { isSelected: true, isReverted: true } },
-        ],
-        expected: [
-          { scriptId: 'script-1-cat-1', newStatus: { isSelected: true, isReverted: true } },
-          { scriptId: 'script-2-cat-2', newStatus: { isSelected: true, isReverted: true } },
-          { scriptId: 'script-3-cat-3', newStatus: { isSelected: true, isReverted: true } },
-        ],
+        doCategoryChanges: ({ changeStatusOfAllCategories }) => changeStatusOfAllCategories(
+          { isSelected: true, isReverted: true },
+        ),
+        expectScriptChanges: ({ expectSameStatusFromAllScripts }) => expectSameStatusFromAllScripts(
+          { isSelected: true, isReverted: true },
+        ),
       },
       {
         description: 'single script: deselect',
-        categories: [
-          { categoryId: 1, scriptIds: ['single-script'] },
+        initialCategorySetup: [
+          {
+            categoryId: 'single-category',
+            scriptIds: ['single-script'],
+          },
         ],
-        changes: [
-          { categoryId: 1, newStatus: { isSelected: false } },
-        ],
-        expected: [
-          { scriptId: 'single-script', newStatus: { isSelected: false } },
-        ],
+        doCategoryChanges: ({ changeStatusOfAllCategories }) => changeStatusOfAllCategories(
+          { isSelected: false },
+        ),
+        expectScriptChanges: ({ expectSameStatusFromAllScripts }) => expectSameStatusFromAllScripts(
+          { isSelected: false },
+        ),
       },
       {
         description: 'multiple scripts: deselect',
-        categories: [
-          { categoryId: 1, scriptIds: ['script-1-cat1'] },
-          { categoryId: 2, scriptIds: ['script-2-cat2'] },
+        initialCategorySetup: [
+          {
+            categoryId: 'first-category',
+            scriptIds: ['first-category-first-script'],
+          },
+          {
+            categoryId: 'second-category',
+            scriptIds: ['second-category-first-script'],
+          },
         ],
-        changes: [
-          { categoryId: 1, newStatus: { isSelected: false } },
-          { categoryId: 2, newStatus: { isSelected: false } },
-        ],
-        expected: [
-          { scriptId: 'script-1-cat1', newStatus: { isSelected: false } },
-          { scriptId: 'script-2-cat2', newStatus: { isSelected: false } },
-        ],
+        doCategoryChanges: ({ changeStatusOfAllCategories }) => changeStatusOfAllCategories(
+          { isSelected: false },
+        ),
+        expectScriptChanges: ({ expectSameStatusFromAllScripts }) => expectSameStatusFromAllScripts(
+          { isSelected: false },
+        ),
       },
       {
         description: 'mixed operations (select, revert, deselect)',
-        categories: [
-          { categoryId: 1, scriptIds: ['to-revert'] },
-          { categoryId: 2, scriptIds: ['not-revert'] },
-          { categoryId: 3, scriptIds: ['to-deselect'] },
+        initialCategorySetup: [
+          {
+            categoryId: 'first-category',
+            scriptIds: ['first-category-first-script-to-revert'],
+          },
+          {
+            categoryId: 'second-category',
+            scriptIds: ['second-category-first-script-to-not-revert'],
+          },
+          {
+            categoryId: 'third-category',
+            scriptIds: ['third-category-first-script-to-deselect'],
+          },
         ],
-        changes: [
-          { categoryId: 1, newStatus: { isSelected: true, isReverted: true } },
-          { categoryId: 2, newStatus: { isSelected: true, isReverted: false } },
-          { categoryId: 3, newStatus: { isSelected: false } },
+        doCategoryChanges: ({ initialCategories: categories }) => [
+          {
+            categoryKey: categories[0].categoryKey,
+            newStatus: { isSelected: true, isReverted: true },
+          },
+          {
+            categoryKey: categories[1].categoryKey,
+            newStatus: { isSelected: true, isReverted: false },
+          },
+          {
+            categoryKey: categories[2].categoryKey,
+            newStatus: { isSelected: false },
+          },
         ],
-        expected: [
-          { scriptId: 'to-revert', newStatus: { isSelected: true, isReverted: true } },
-          { scriptId: 'not-revert', newStatus: { isSelected: true, isReverted: false } },
-          { scriptId: 'to-deselect', newStatus: { isSelected: false } },
+        expectScriptChanges: ({ initialCategories: categories }) => [
+          {
+            scriptKey: categories[0].scriptKeys[0],
+            newStatus: { isSelected: true, isReverted: true },
+          },
+          {
+            scriptKey: categories[1].scriptKeys[0],
+            newStatus: { isSelected: true, isReverted: false },
+          },
+          {
+            scriptKey: categories[2].scriptKeys[0],
+            newStatus: { isSelected: false },
+          },
         ],
       },
       {
         description: 'affecting selected categories only',
-        categories: [
-          { categoryId: 1, scriptIds: ['relevant-1', 'relevant-2'] },
-          { categoryId: 2, scriptIds: ['not-relevant-1', 'not-relevant-2'] },
-          { categoryId: 3, scriptIds: ['not-relevant-3', 'not-relevant-4'] },
+        initialCategorySetup: [
+          {
+            categoryId: 'first-category (changed)',
+            scriptIds: [
+              'first-category-first-script (changed)',
+              'first-category-second-script (changed)',
+            ],
+          },
+          {
+            categoryId: 'second-category (unchanged)',
+            scriptIds: [
+              'second-category-first-script (unchanged)',
+              'second-category-second-script (unchanged)',
+            ],
+          },
+          {
+            categoryId: 'third-category (unchanged)',
+            scriptIds: [
+              'second-category-first-script (unchanged)',
+              'second-category-second-script (unchanged)',
+            ],
+          },
         ],
-        changes: [
-          { categoryId: 1, newStatus: { isSelected: true, isReverted: true } },
+        doCategoryChanges: ({ initialCategories: categories }) => [
+          {
+            categoryKey: categories[0].categoryKey,
+            newStatus: { isSelected: true, isReverted: true },
+          },
         ],
-        expected: [
-          { scriptId: 'relevant-1', newStatus: { isSelected: true, isReverted: true } },
-          { scriptId: 'relevant-2', newStatus: { isSelected: true, isReverted: true } },
+        expectScriptChanges: ({ initialCategories: categories }) => [
+          {
+            scriptKey: categories[0].scriptKeys[0],
+            newStatus: { isSelected: true, isReverted: true },
+          },
+          {
+            scriptKey: categories[0].scriptKeys[1],
+            newStatus: { isSelected: true, isReverted: true },
+          },
+          // Excluding unchanged scripts/categories to assert that they are not changed
         ],
       },
     ];
-    testScenarios.forEach(({
-      description, changes, categories, expected,
-    }) => {
-      it(description, () => {
+    testScenarios.forEach((testScenario) => {
+      it(testScenario.description, () => {
         // arrange
+        const testData = buildTestScenarioData(testScenario);
         const scriptSelectionStub = new ScriptSelectionStub();
         const sut = new ScriptToCategorySelectionMapperBuilder()
           .withScriptSelection(scriptSelectionStub)
           .withCollection(new CategoryCollectionStub().withAction(
-            new CategoryStub(99)
+            new CategoryStub('category-with-all-scripts')
               // Register scripts to test for nested items
-              .withAllScriptIdsRecursively(...categories.flatMap((c) => c.scriptIds))
-              .withCategories(...categories.map(
-                (c) => new CategoryStub(c.categoryId).withAllScriptIdsRecursively(...c.scriptIds),
+              .withAllScriptKeysRecursively(
+                ...testData.categoriesWithKeys.flatMap((c) => c.scriptKeys),
+              )
+              .withCategories(...testData.categoriesWithKeys.map(
+                (category) => new CategoryStub(category.categoryKey)
+                  .withAllScriptKeysRecursively(...category.scriptKeys),
               )),
           ))
           .build();
         // act
         sut.processChanges({
-          changes,
+          changes: testData.actualCategoryChanges,
         });
         // assert
         expect(scriptSelectionStub.callHistory).to.have.lengthOf(1);
         const call = scriptSelectionStub.callHistory.find((m) => m.methodName === 'processChanges');
         expectExists(call);
         const [command] = call.args;
-        const { changes: actualChanges } = (command as ScriptSelectionChangeCommand);
-        expect(actualChanges).to.have.lengthOf(expected.length);
-        expect(actualChanges).to.deep.members(expected);
+        const { changes: actualScriptChanges } = (command as ScriptSelectionChangeCommand);
+        expect(actualScriptChanges).to.have.lengthOf(testData.expectedScriptChanges.length);
+        expect(actualScriptChanges).to.deep.members(testData.expectedScriptChanges);
       });
     });
   });
@@ -225,14 +318,14 @@ describe('ScriptToCategorySelectionMapper', () => {
 class ScriptToCategorySelectionMapperBuilder {
   private scriptSelection: ScriptSelection = new ScriptSelectionStub();
 
-  private collection: ICategoryCollection = new CategoryCollectionStub();
+  private collection: CategoryCollection = new CategoryCollectionStub();
 
   public withScriptSelection(scriptSelection: ScriptSelection): this {
     this.scriptSelection = scriptSelection;
     return this;
   }
 
-  public withCollection(collection: ICategoryCollection): this {
+  public withCollection(collection: CategoryCollection): this {
     this.collection = collection;
     return this;
   }
@@ -246,16 +339,17 @@ class ScriptToCategorySelectionMapperBuilder {
 }
 
 type TestScripts = readonly [ScriptStub, ScriptStub, ScriptStub];
-function setupTestWithPreselectedScripts(options: {
-  preselect: (allScripts: TestScripts) => readonly ScriptStub[],
-}) {
+interface PreselectedTestOptions {
+  preselect: (allScripts: TestScripts) => readonly ScriptStub[];
+}
+function setupTestWithPreselectedScripts(options: PreselectedTestOptions) {
   const allScripts: TestScripts = [
     new ScriptStub('first-script'),
     new ScriptStub('second-script'),
     new ScriptStub('third-script'),
   ];
   const preselectedScripts = options.preselect(allScripts);
-  const category = new CategoryStub(1)
+  const category = new CategoryStub('category-with-all-scripts')
     .withAllScriptsRecursively(...allScripts); // Register scripts to test for nested items
   const collection = new CategoryCollectionStub().withAction(category);
   const sut = new ScriptToCategorySelectionMapperBuilder()

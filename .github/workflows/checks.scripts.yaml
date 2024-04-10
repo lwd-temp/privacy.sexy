@@ -53,3 +53,17 @@ jobs:
       -
         name: Run install-deps
         run: ${{ matrix.install-command }}
+
+  add_missing_ids:
+    runs-on: ${{ matrix.os }}-latest
+    strategy:
+      matrix:
+        os: [ macos, ubuntu, windows ]
+      fail-fast: false # Still interested to see results from other combinations
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Create icons
+        run: python3 ./scripts/add_missing_ids.py
